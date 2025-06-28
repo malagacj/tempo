@@ -20,9 +20,10 @@ on:
         type: choice
         options:
           - deploy
-          - reset_and_deploy
           - stop
+          - stop_and_deploy
           - purge
+          - purge_and_deploy
 
 jobs:
   remote-ssh:
