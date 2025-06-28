@@ -3,15 +3,6 @@ name: Manual SSH Trigger
 on:
   workflow_dispatch:
     inputs:
-      command:
-        description: 'Command to run on the remote server'
-        required: true
-        default: 'uptime'
-
-
-on:
-  workflow_dispatch:
-    inputs:
       TEMPO_HTTP_PORT:
         description: 'TEMPO_HTTP_PORT'
         required: true
