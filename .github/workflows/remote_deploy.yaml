@@ -48,7 +48,7 @@ jobs:
           case "${{ github.event.inputs.command }}" in
             deploy)
               echo "Running deploy..."
-              ssh "${{ secrets.SERVER_USER }}"@"${{ secrets.SERVER_NAME }}" "docker compose up"
+              ssh "${{ secrets.SERVER_USER }}"@"${{ secrets.SERVER_NAME }}" "docker compose up -d"
               ;;
             stop)
               echo "Running deploy..."
@@ -56,7 +56,7 @@ jobs:
               ;;
             stop_and_deploy)
               echo "Running reset_and_deploy..."
-              ssh "${{ secrets.SERVER_USER }}"@"${{ secrets.SERVER_NAME }}" "docker compose down; docker compose up"
+              ssh "${{ secrets.SERVER_USER }}"@"${{ secrets.SERVER_NAME }}" "docker compose down; docker compose up -d"
               ;;
             purge)
               echo "Running reset_and_deploy..."
@@ -64,7 +64,7 @@ jobs:
               ;;
             purge_and_deploy)
               echo "Running reset_and_deploy..."
-              ssh "${{ secrets.SERVER_USER }}"@"${{ secrets.SERVER_NAME }}" "docker compose down -v --rmi all; docker compose up"
+              ssh "${{ secrets.SERVER_USER }}"@"${{ secrets.SERVER_NAME }}" "docker compose down -v --rmi all; docker compose up -d"
               ;;
             *)
               echo "Unknown command"
