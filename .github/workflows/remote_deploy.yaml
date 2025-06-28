@@ -38,7 +38,7 @@ jobs:
 
       - name: Copy artifact to remote server
         run: |
-          scp docker-compose.yaml "${{ secrets.SERVER_USER }}"@"${{ secrets.SERVER_NAME }}":
+          scp docker-compose.yaml tempo.yaml "${{ secrets.SERVER_USER }}"@"${{ secrets.SERVER_NAME }}":
 
       - name: Run command on remote server
         run: |
