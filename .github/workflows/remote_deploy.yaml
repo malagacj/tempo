@@ -1,0 +1,24 @@
+name: Manual SSH Trigger
+
+on:
+  workflow_dispatch:
+    inputs:
+      command:
+        description: 'Command to run on the remote server'
+        required: true
+        default: 'uptime'
+
+jobs:
+  remote-ssh:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up SSH key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.ID_RSA_GITHUB_MALAGACJ }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H "${{ secrets.SERVER_NAME }}" >> ~/.ssh/known_hosts
+
+      - name: Run command on remote server
+        run: |
+          ssh "${{ secrets.SERVER_USER }}"@"${{ secrets.SERVER_NAME }}" "${{ github.event.inputs.command }}"
