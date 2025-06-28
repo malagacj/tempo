@@ -8,6 +8,29 @@ on:
         required: true
         default: 'uptime'
 
+
+on:
+  workflow_dispatch:
+    inputs:
+      TEMPO_HTTP_PORT:
+        description: 'TEMPO_HTTP_PORT'
+        required: true
+        default: '3200'
+        type: string
+      JAEGER_INGEST_PORT:
+        description: 'JAEGER_INGEST_PORT'
+        required: true
+        default: '14268'
+        type: string
+      command:
+        description: 'Choose a command to run'
+        required: true
+        default: 'deploy'
+        type: choice
+        options:
+          - deploy
+          - reset_and_deploy
+
 jobs:
   remote-ssh:
     runs-on: ubuntu-latest
@@ -19,6 +42,23 @@ jobs:
           chmod 600 ~/.ssh/id_rsa
           ssh-keyscan -H "${{ secrets.SERVER_NAME }}" >> ~/.ssh/known_hosts
 
+      - name: Copy artifact to remote server
+        run: |
+          scp docker-compose.yaml "${{ secrets.SERVER_USER }}"@"${{ secrets.SERVER_NAME }}":
+
       - name: Run command on remote server
         run: |
-          ssh "${{ secrets.SERVER_USER }}"@"${{ secrets.SERVER_NAME }}" "${{ github.event.inputs.command }}"
+          case "${{ github.event.inputs.command }}" in
+            deploy)
+              echo "Running deploy..."
+              ssh "${{ secrets.SERVER_USER }}"@"${{ secrets.SERVER_NAME }}" "docker compose up"
+              ;;
+            reset_and_deploy)
+              echo "Running reset_and_deploy..."
+              ssh "${{ secrets.SERVER_USER }}"@"${{ secrets.SERVER_NAME }}" "docker compose down -v --rmi all; docker compose up"
+              ;;
+            *)
+              echo "Unknown command"
+              exit 1
+              ;;
+          esac
