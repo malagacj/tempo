@@ -27,9 +27,8 @@ on:
 
 jobs:
   call-copy_to_server:
-    uses: malagacj/shared-actions/.github/workflows/reusable-build.yml@main
+    uses: malagacj/shared-actions/.github/workflows/docker-compose/copy_to_server.yaml@master
     secrets:
       ID_RSA_GITHUB_MALAGACJ: ${{ secrets.ID_RSA_GITHUB_MALAGACJ }}
       SERVER_NAME: ${{ secrets.SERVER_NAME }}
       SERVER_USER: ${{ secrets.SERVER_USER }}
-      - name: Checkout code
