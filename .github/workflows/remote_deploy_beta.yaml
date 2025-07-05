@@ -27,7 +27,7 @@ on:
 
 jobs:
   call-copy_to_server:
-    uses: malagacj/workflows/.github/workflows/copy_to_server.yaml@master
+    uses: malagacj/workflows/.github/workflows/copy_to_server_beta.yaml@master
     secrets:
       ID_RSA_GITHUB_MALAGACJ: ${{ secrets.ID_RSA_GITHUB_MALAGACJ }}
       SERVER_NAME: ${{ secrets.SERVER_NAME }}
