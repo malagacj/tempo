@@ -53,7 +53,7 @@ jobs:
   deploy-docker-compose:
     uses: malagacj/gha_tools/.github/workflows/deploy_docker_compose.yaml@test
     with:
-      DEPLOYMENT_DIR: ${{ env.DEPLOYMENT_DIR }}
+      DEPLOYMENT_DIR: $DEPLOYMENT_DIR
       COMMAND: "${{ github.event.inputs.command }}"
     secrets:
       ID_RSA_GITHUB_MALAGACJ: ${{ secrets.ID_RSA_GITHUB_MALAGACJ }}
