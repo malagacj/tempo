@@ -43,8 +43,8 @@ jobs:
   call-copy_artifact:
     uses: malagacj/gha_tools/.github/workflows/copy_to_server_beta.yaml@test
     with:
-      DEPLOYMENT_DIR: $DEPLOYMENT_DIR
-      SOURCE_FILES: "docker-compose.yaml,.env,tempo.yaml"
+      DEPLOYMENT_DIR: "${{ env.DEPLOYMENT_DIR }}"
+      SOURCE_FILES: "docker-compose.yaml,tempo.yaml"
     secrets:
       ID_RSA_GITHUB_MALAGACJ: ${{ secrets.ID_RSA_GITHUB_MALAGACJ }}
       SERVER_NAME: ${{ secrets.SERVER_NAME }}
