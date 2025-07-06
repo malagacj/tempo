@@ -41,7 +41,7 @@ jobs:
           echo "JAEGER_INGEST_PORT=${{ github.event.inputs.JAEGER_INGEST_PORT }}" >> .env
 
   call-copy_artifact:
-    uses: malagacj/workflows/.github/workflows/copy_to_server_beta.yaml@test
+    uses: malagacj/workflows/.github/gha_tools/copy_to_server_beta.yaml@test
     with:
       DEPLOYMENT_DIR: ${{ env.DEPLOYMENT_DIR }}
       SOURCE_FILES: "docker-compose.yaml,.env,tempo.yaml"
@@ -51,7 +51,7 @@ jobs:
       SERVER_USER: ${{ secrets.SERVER_USER }}
 
   deploy-docker-compose:
-    uses: malagacj/workflows/.github/workflows/deploy_docker_compose.yaml@test
+    uses: malagacj/workflows/.github/gha_tools/deploy_docker_compose.yaml@test
     with:
       DEPLOYMENT_DIR: ${{ env.DEPLOYMENT_DIR }}
       COMMAND: "${{ github.event.inputs.command }}"
