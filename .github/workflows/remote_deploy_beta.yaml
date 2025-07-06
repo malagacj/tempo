@@ -1,4 +1,4 @@
-name: Manual SSH Trigger
+name: Manual SSH Trigger Beta
 
 on:
   workflow_dispatch:
