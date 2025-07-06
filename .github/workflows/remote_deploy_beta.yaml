@@ -1,0 +1,61 @@
+name: Manual SSH Trigger
+
+on:
+  workflow_dispatch:
+    inputs:
+      TEMPO_HTTP_PORT:
+        description: 'TEMPO_HTTP_PORT'
+        required: true
+        default: '127.0.0.1:3200'
+        type: string
+      JAEGER_INGEST_PORT:
+        description: 'JAEGER_INGEST_PORT'
+        required: true
+        default: '127.0.0.1:14268'
+        type: string
+      command:
+        description: 'Choose a command to run'
+        required: true
+        default: 'deploy'
+        type: choice
+        options:
+          - deploy
+          - stop
+          - stop_and_deploy
+          - purge
+          - purge_and_deploy
+
+env:
+  DEPLOYMENT_DIR: "gha_deployments/tempo/manual"
+
+jobs:
+  create-env-file:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Create .env file
+        run: |
+          echo "TEMPO_HTTP_PORT=${{ github.event.inputs.TEMPO_HTTP_PORT }}" >> .env
+          echo "JAEGER_INGEST_PORT=${{ github.event.inputs.JAEGER_INGEST_PORT }}" >> .env
+
+  call-copy_artifact:
+    uses: malagacj/workflows/.github/workflows/copy_to_server_beta.yaml@test
+    with:
+      DEPLOYMENT_DIR: ${{ env.DEPLOYMENT_DIR }}
+      SOURCE_FILES: "docker-compose.yaml,.env,tempo.yaml"
+    secrets:
+      ID_RSA_GITHUB_MALAGACJ: ${{ secrets.ID_RSA_GITHUB_MALAGACJ }}
+      SERVER_NAME: ${{ secrets.SERVER_NAME }}
+      SERVER_USER: ${{ secrets.SERVER_USER }}
+
+  deploy-docker-compose:
+    uses: malagacj/workflows/.github/workflows/deploy_docker_compose.yaml@test
+    with:
+      DEPLOYMENT_DIR: ${{ env.DEPLOYMENT_DIR }}
+      COMMAND: "${{ github.event.inputs.command }}"
+    secrets:
+      ID_RSA_GITHUB_MALAGACJ: ${{ secrets.ID_RSA_GITHUB_MALAGACJ }}
+      SERVER_NAME: ${{ secrets.SERVER_NAME }}
+      SERVER_USER: ${{ secrets.SERVER_USER }}
