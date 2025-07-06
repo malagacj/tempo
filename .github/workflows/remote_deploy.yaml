@@ -6,12 +6,12 @@ on:
       TEMPO_HTTP_PORT:
         description: 'TEMPO_HTTP_PORT'
         required: true
-        default: '3200'
+        default: '127.0.0.1:3200'
         type: string
       JAEGER_INGEST_PORT:
         description: 'JAEGER_INGEST_PORT'
         required: true
-        default: '14268'
+        default: '127.0.0.1:14268'
         type: string
       command:
         description: 'Choose a command to run'
@@ -35,6 +35,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Create .env file
+        run: |
+          echo "TEMPO_HTTP_PORT=${{ github.event.inputs.TEMPO_HTTP_PORT }}" >> .env
+          echo "JAEGER_INGEST_PORT=${{ github.event.inputs.JAEGER_INGEST_PORT }}" >> .env
+
       - name: Create deployment folder
         uses: appleboy/ssh-action@v1
         with:
@@ -49,7 +54,7 @@ jobs:
           host: ${{ secrets.SERVER_NAME }}
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.ID_RSA_GITHUB_MALAGACJ }}
-          source: "docker-compose.yaml,tempo.yaml"
+          source: "docker-compose.yaml,.env,tempo.yaml"
           target: "${{ env.DEPLOYMENT_DIR }}"
 
   deploy:
